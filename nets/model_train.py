@@ -3,7 +3,7 @@ from tensorflow.contrib import slim
 
 from nets import vgg
 from utils.rpn_msr.anchor_target_layer import anchor_target_layer as anchor_target_layer_py
-
+from utils.rpn_msr.config import Config as cfg
 
 def mean_image_subtraction(images, means=[123.68, 116.78, 103.94]):
     num_channels = images.get_shape().as_list()[-1]
@@ -71,8 +71,9 @@ def model(image):
 
     lstm_output = Bilstm(rpn_conv, 512, 128, 512, scope_name='BiLSTM')
 
-    bbox_pred = lstm_fc(lstm_output, 512, 10 * 4, scope_name="bbox_pred")
-    cls_pred = lstm_fc(lstm_output, 512, 10 * 2, scope_name="cls_pred")
+    A = len(cfg.ANCHORS_HEIGHT)
+    bbox_pred = lstm_fc(lstm_output, 512, A * 4, scope_name="bbox_pred")
+    cls_pred = lstm_fc(lstm_output, 512, A * 2, scope_name="cls_pred")
 
     # transpose: (1, H, W, A x d) -> (1, H, WxA, d)
     cls_pred_shape = tf.shape(cls_pred)
