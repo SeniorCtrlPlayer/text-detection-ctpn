@@ -12,3 +12,6 @@ class Config:
     RPN_POST_NMS_TOP_N = 1000
     RPN_NMS_THRESH = 0.7
     RPN_MIN_SIZE = 8
+
+    # origin [11, 16, 23, 33, 48, 68, 97, 139, 198, 283]
+    ANCHORS_HEIGHT = [23, 33, 48, 68, 97, 139]
