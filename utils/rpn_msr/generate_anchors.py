@@ -1,5 +1,5 @@
 import numpy as np
-
+from utils.rpn_msr.config import Config as cfg
 
 def generate_basic_anchors(sizes, base_size=16):
     base_anchor = np.array([0, 0, base_size - 1, base_size - 1], np.int32)
@@ -24,7 +24,8 @@ def scale_anchor(anchor, h, w):
 
 def generate_anchors(base_size=16, ratios=[0.5, 1, 2],
                      scales=2 ** np.arange(3, 6)):
-    heights = [11, 16, 23, 33, 48, 68, 97, 139, 198, 283]
+    # alter by lwk
+    heights = cfg.ANCHORS_HEIGHT
     widths = [16]
     sizes = []
     for h in heights:
