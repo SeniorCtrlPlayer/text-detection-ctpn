@@ -52,7 +52,9 @@ def proposal_layer(rpn_cls_prob_reshape, rpn_bbox_pred, im_info, _feat_stride=[1
     min_size = cfg.RPN_MIN_SIZE  # 候选box的最小尺寸，目前是16，高宽均要大于16
 
     height, width = rpn_cls_prob_reshape.shape[1:3]  # feature-map的高宽
-    width = width // 10
+    
+    # 除以锚框基础个数
+    width = width // _num_anchors
 
     # the first set of _num_anchors channels are bg probs
     # the second set are the fg probs, which we want
@@ -86,11 +88,11 @@ def proposal_layer(rpn_cls_prob_reshape, rpn_bbox_pred, im_info, _feat_stride=[1
     # cell K shifts (K, 1, 4) to get
     # shift anchors (K, A, 4)
     # reshape to (K*A, 4) shifted anchors
-    A = _num_anchors
+    # A is _num_anchors -- add by lwk
     K = shifts.shape[0]
-    anchors = _anchors.reshape((1, A, 4)) + \
+    anchors = _anchors.reshape((1, _num_anchors, 4)) + \
               shifts.reshape((1, K, 4)).transpose((1, 0, 2))
-    anchors = anchors.reshape((K * A, 4))  # 这里得到的anchor就是整张图像上的所有anchor
+    anchors = anchors.reshape((K * _num_anchors, 4))  # 这里得到的anchor就是整张图像上的所有anchor
 
     # Transpose and reshape predicted bbox transformations to get them
     # into the same order as the anchors:
