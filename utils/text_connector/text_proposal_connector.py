@@ -26,7 +26,10 @@ class TextProposalConnector:
         text_lines = np.zeros((len(tp_groups), 5), np.float32)
 
         for index, tp_indices in enumerate(tp_groups):
-            text_line_boxes = text_proposals[list(tp_indices)]
+            # origin
+            # text_line_boxes = text_proposals[list(tp_indices)]
+            # add by lwk
+            text_line_boxes = text_proposals[tp_indices]
 
             x0 = np.min(text_line_boxes[:, 0])
             x1 = np.max(text_line_boxes[:, 2])
